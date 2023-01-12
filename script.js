@@ -12,7 +12,7 @@ function getComputerChoice() {
 // get user input
 function getUserChoice(message = 'Make your move: ') {
     let rawChoice = prompt(message);
-    // make userChoice case-insensitive
+    // make userChoice case-insensitive and not empty
     let formattedChoice = rawChoice ? 
         rawChoice[0].toUpperCase() + rawChoice.slice(1).toLowerCase() :
         getUserChoice('Make your move: ');
@@ -79,4 +79,4 @@ function game(rounds = 5) {
     wantReplay(rounds);
 }
 
-game(3);
+//game(3);
