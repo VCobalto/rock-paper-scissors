@@ -1,82 +1,80 @@
-const OPTIONS = ['Rock', 'Paper', 'Scissors'];
-let playerCounter = 0;
-let computerCounter = 0;
+const OPTIONS = ['rock', 'paper', 'scissors'];
+let playerScore = 0;
+let computerScore = 0;
 
-// get computer choice
-function getComputerChoice() {
-    //need to randomize a choice that will always be between 0,1,2...
-    let choice = Math.floor(Math.random() * 3);
-    return OPTIONS[choice];
-}
+//show turn result and score
+const message = document.querySelector('#turn-message');
+const showUserScore = document.querySelector('#user-score');
+const showComputerScore = document.querySelector('#computer-score');
+showUserScore.textContent = `${playerScore}`;
+showComputerScore.textContent = `${computerScore}`;
 
-// get user input
-function getUserChoice(message = 'Make your move: ') {
-    let rawChoice = prompt(message);
-    // make userChoice case-insensitive and not empty
-    let formattedChoice = rawChoice ? 
-        rawChoice[0].toUpperCase() + rawChoice.slice(1).toLowerCase() :
-        getUserChoice('Make your move: ');
-    // if the choice is invalid, ask again
-    let choice = OPTIONS.includes(formattedChoice) ? formattedChoice : getUserChoice('Invalid move, please try again: ');
-    return choice;
-}
-    
 
-// compare inputs and determine winner, update general score (counters)
+function getComputerSelection() {
+    let selection = Math.floor(Math.random() * 3);
+    return OPTIONS[selection];
+}    
+
+// compare inputs and determine winner, update scores
 function playRound(computerSelection, playerSelection) {
     if (computerSelection === playerSelection) {
-        return `Draw! You both picked ${playerSelection}.`;
+        message.textContent = `Draw! You both picked ${playerSelection}.`;
     } 
-    else if (playerSelection === 'Scissors' && computerSelection === 'Paper'||
-    playerSelection === 'Paper' && computerSelection === 'Rock' ||
-    playerSelection === 'Rock' && computerSelection === 'Scissors') {
-        playerCounter++;
-        return `You win! ${playerSelection} beats ${computerSelection}.`;
+    else if (playerSelection === 'scissors' && computerSelection === 'paper'||
+    playerSelection === 'paper' && computerSelection === 'rock' ||
+    playerSelection === 'rock' && computerSelection === 'scissors') {
+        playerScore++;
+        showUserScore.textContent = `${playerScore}`;
+        message.textContent = `You win! ${playerSelection} beats ${computerSelection}.`;
     } 
     else {
-        computerCounter++;
-        return `You loose! ${computerSelection} beats ${playerSelection}.`;
+        computerScore++;
+        showComputerScore.textContent = `${computerScore}`;
+        message.textContent = `You loose! ${computerSelection} beats ${playerSelection}.`;
     }
 }
 
 function announceScore() {
     let message = '';
-    if (computerCounter > playerCounter) {
+    if (computerScore > playerScore) {
         message = "Looks like you lost. Better luck next time!"
     } 
-    else if (computerCounter < playerCounter) {
+    else if (computerScore < playerScore) {
         message = "Congratulations, you won the game!"
     }
     else {
         message = "The game ends in a draw!"
     }
     console.log(`The final score is:
-    PLAYER: ${playerCounter}
-    COMPUTER: ${computerCounter}
+    PLAYER: ${playerScore}
+    COMPUTER: ${computerScore}
 ${message}`);
 }
 
-function wantReplay(rounds) {
-    let replay = confirm('Do you want to play another game?');  
-    if (replay) {
-        game(rounds);
-    }
-    else {
-        alert("Thank you for playing, see you again soon!");
-    }
-}
+const buttons = document.querySelectorAll('.move-selector');
+
+buttons.forEach(button => button.addEventListener('click', () => playRound(getComputerSelection(), button.id)));
+
+//REMAINING FUNCTIONS TO BE CONVERTED
+// function wantReplay(rounds) {
+//     let replay = confirm('Do you want to play another game?');  
+//     if (replay) {
+//         game(rounds);
+//     }
+//     else {
+//         alert("Thank you for playing, see you again soon!");
+//     }
+// }
 
 
-function game(rounds = 5) {
-    for (let i = 0; i < rounds; i++) {
-        console.log(playRound(getComputerChoice(), getUserChoice()));
-    }
+// function game(rounds = 5) {
+//     for (let i = 0; i < rounds; i++) {
+//         console.log(playRound(getComputerSelection(), getUserSelection()));
+//     }
 
-    announceScore();
-    playerCounter = 0;
-    computerCounter = 0;
+//     announceScore();
+//     playerScore = 0;
+//     computerScore = 0;
 
-    wantReplay(rounds);
-}
-
-//game(3);
+//     wantReplay(rounds);
+// }
