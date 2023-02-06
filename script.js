@@ -10,11 +10,6 @@ showUserScore.textContent = `${playerScore}`;
 showComputerScore.textContent = `${computerScore}`;
 
 
-function getComputerSelection() {
-    let selection = Math.floor(Math.random() * 3);
-    return OPTIONS[selection];
-}    
-
 // compare inputs and determine winner, update scores
 function playRound(computerSelection, playerSelection) {
     if (computerSelection === playerSelection) {
@@ -34,47 +29,30 @@ function playRound(computerSelection, playerSelection) {
     }
 }
 
+// play the game
+const buttons = document.querySelectorAll('.move-selector');
+buttons.forEach(button => button.addEventListener('click', playGame));
+
+function getComputerSelection() {
+    let selection = Math.floor(Math.random() * 3);
+    return OPTIONS[selection];
+}    
+
 function announceScore() {
-    let message = '';
+    let result = '';
     if (computerScore > playerScore) {
-        message = "Looks like you lost. Better luck next time!"
-    } 
-    else if (computerScore < playerScore) {
-        message = "Congratulations, you won the game!"
+        result = "Looks like you lost the game. Better luck next time!"
+    } else {
+        result = "Congratulations, you won the game!"
     }
-    else {
-        message = "The game ends in a draw!"
-    }
-    console.log(`The final score is:
-    PLAYER: ${playerScore}
-    COMPUTER: ${computerScore}
-${message}`);
+    message.textContent = (`${result}`);
 }
 
-const buttons = document.querySelectorAll('.move-selector');
-
-buttons.forEach(button => button.addEventListener('click', () => playRound(getComputerSelection(), button.id)));
-
-//REMAINING FUNCTIONS TO BE CONVERTED
-// function wantReplay(rounds) {
-//     let replay = confirm('Do you want to play another game?');  
-//     if (replay) {
-//         game(rounds);
-//     }
-//     else {
-//         alert("Thank you for playing, see you again soon!");
-//     }
-// }
-
-
-// function game(rounds = 5) {
-//     for (let i = 0; i < rounds; i++) {
-//         console.log(playRound(getComputerSelection(), getUserSelection()));
-//     }
-
-//     announceScore();
-//     playerScore = 0;
-//     computerScore = 0;
-
-//     wantReplay(rounds);
-// }
+function playGame(e, winningScore = 5) {
+    const playerSelection = e.target.id;
+    playRound(getComputerSelection(), playerSelection);
+    if (playerScore === winningScore || computerScore === winningScore) {
+        buttons.forEach(button => button.removeEventListener('click', playGame));
+        announceScore();
+    };
+}
